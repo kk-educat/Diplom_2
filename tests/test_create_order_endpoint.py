@@ -38,9 +38,11 @@ class TestCreateOrder:
     @allure.title('Тест-кейс создания заказа с неверным хешем одного из ингредиентов')
     def test_create_order_ingredient_incorrect_hash(self, ingredients_data, user_data):
         # сохраняем полученный от фикстуры корректный хеш ингредиента в переменную 
-        ingr = ingredients_data["data"][1]
-        # в хеше этого же ингредиента заменяем 5 символов с 10 до 15 случайными буквами
-        ingredients_data["data"][1] = ingr[:10] + random.choices(string.ascii_letters, k=5) + ingr[15:]
+        ingr = ingredients_data["ingredients"][1]
+        # генерируем строку из 5 случайных букв
+        random_chars = ''.join(random.choices(string.ascii_letters, k=5))
+        # в хеше ингредиента заменяем 5 символов с 10 до 15 подготовленной строкой из 5 случайных букв
+        ingredients_data["ingredients"][1] = ingr[:10] + random_chars + ingr[15:]
         # отправляем тестируемый запрос
         response = ClientAPI().create_order(ingredients_data, user_data["accessToken"])
         # проверка результатов
