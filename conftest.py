@@ -7,14 +7,15 @@ from helpers import ClientAPI
 def user_data():
     payload = User().get_new_user_data()
     response = ClientAPI().create_user(payload)
+    token = response.json()["accessToken"]
     data = {
         "email": payload["email"],
         "password": payload["password"],
         "name": payload["name"],
-        "accessToken": response.json()["accessToken"]
+        "accessToken": token
     }
     yield data
-    ClientAPI().delete_user(data["accessToken"])
+    ClientAPI().delete_user(token)
 
 @pytest.fixture
 def data_for_user_deletion():
